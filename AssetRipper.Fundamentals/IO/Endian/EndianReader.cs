@@ -168,6 +168,48 @@ namespace AssetRipper.Core.IO.Endian
 			return false;
 		}
 
+		/// <summary>
+		/// Read zero terminated bytes
+		/// </summary>
+		/// <returns>Read string</returns>
+		public byte[] ReadStringZeroTermBytes()
+		{
+			if (ReadStringZeroTerm(m_buffer.Length, out byte[] result))
+			{
+				return result;
+			}
+			throw new Exception("Can't find end of byte");
+		}
+
+		/// <summary>
+		/// Read zero terminated bytes
+		/// </summary>
+		/// <param name="maxLength">Max allowed character count to read</param>
+		/// <param name="result">Read string if found</param>
+		/// <returns>Whether zero term has been found</returns>
+		public bool ReadStringZeroTerm(int maxLength, out byte[] result)
+		{
+			maxLength = System.Math.Min(maxLength, m_buffer.Length);
+			for (int i = 0; i < maxLength; i++)
+			{
+				byte bt = ReadByte();
+				if (bt == 0)
+				{
+					byte[] bytes = new byte[i];
+					for (int j = 0; j < m_buffer.Length && m_buffer[j] != 0; j++)
+					{
+						bytes[j] = m_buffer[j];
+					}
+					result = bytes;
+					return true;
+				}
+				m_buffer[i] = bt;
+			}
+
+			result = null;
+			return false;
+		}
+
 		public bool[] ReadBooleanArray() => ReadBooleanArray(true);
 		public bool[] ReadBooleanArray(bool allowAlignment)
 		{

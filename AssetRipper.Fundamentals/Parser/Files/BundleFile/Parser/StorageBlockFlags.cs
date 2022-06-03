@@ -6,6 +6,8 @@
 		CompressionTypeMask = 0x3F,
 
 		Streamed = 0x40,
+
+		DecryptBlock = 0x100,
 	}
 
 	public static class StorageBlockFlagsExtensions
@@ -18,6 +20,11 @@
 		public static bool IsStreamed(this StorageBlockFlags _this)
 		{
 			return (_this & StorageBlockFlags.Streamed) != 0;
+		}
+
+		public static bool IsDecryptBlock(this StorageBlockFlags _this)
+		{
+			return (_this & StorageBlockFlags.DecryptBlock) != 0;
 		}
 	}
 }

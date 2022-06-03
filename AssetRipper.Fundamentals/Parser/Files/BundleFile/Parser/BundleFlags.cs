@@ -8,6 +8,8 @@
 		BlocksAndDirectoryInfoCombined = 0x40,
 		BlocksInfoAtTheEnd = 0x80,
 		OldWebPluginCompatibility = 0x100,
+
+		Decrypt = 0x200,
 	}
 
 	public static class BundleFlagsExtensions
@@ -34,6 +36,14 @@
 		public static bool IsBlocksInfoAtTheEnd(this BundleFlags _this)
 		{
 			return (_this & BundleFlags.BlocksInfoAtTheEnd) != 0;
+		}
+
+		/// <summary>
+		/// The 0x200 bit
+		/// </summary>
+		public static bool IsBlocksDecrypt(this BundleFlags _this)
+		{
+			return (_this & BundleFlags.Decrypt) != 0;
 		}
 	}
 }

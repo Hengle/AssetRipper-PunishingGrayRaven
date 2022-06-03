@@ -1,5 +1,6 @@
 ﻿using AssetRipper.Core.IO.Endian;
 using AssetRipper.Core.Parser.Files.BundleFile.Parser;
+using AssetRipper.Core.Utils;
 
 namespace AssetRipper.Core.Parser.Files.BundleFile.Header
 {
@@ -11,6 +12,16 @@ namespace AssetRipper.Core.Parser.Files.BundleFile.Header
 			CompressedBlocksInfoSize = reader.ReadInt32();
 			UncompressedBlocksInfoSize = reader.ReadInt32();
 			Flags = (BundleFlags)reader.ReadInt32();
+			if (Flags.IsBlocksDecrypt())
+			{
+				DercyptID = reader.ReadUInt32();
+				DecryptLib.KeyBuff = new byte[32];
+				CabKey1 = new byte[32];
+				CabKey2 = new byte[32];
+				CabKey1 = reader.ReadStringZeroTermBytes();
+				CabKey2 = reader.ReadStringZeroTermBytes();
+				DecryptLib.InitDecryptor(DecryptLib.KeyBuff, Flags.GetCompression(), DecryptLib.aseKey, CabKey1, CabKey2);
+			}
 		}
 
 		/// <summary>
@@ -23,5 +34,8 @@ namespace AssetRipper.Core.Parser.Files.BundleFile.Header
 		public int CompressedBlocksInfoSize { get; set; }
 		public int UncompressedBlocksInfoSize { get; set; }
 		public BundleFlags Flags { get; set; }
+		public uint DercyptID { get; set; }
+		public byte[] CabKey1 { get; set; }
+		public byte[] CabKey2 { get; set; }
 	}
 }
